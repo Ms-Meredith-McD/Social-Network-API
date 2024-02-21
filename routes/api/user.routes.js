@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Find user by id value 
+// Find user by id value and populate thought and friend data
 router.get("/:id", async (req, res) => {
   try {
     const result = await Customer.findById(req.params.id)
@@ -56,7 +56,7 @@ router.delete("/:id", async (req, res) => {
     }
 
     // Remove the user's associated thoughts
-    await Thought.deleteMany({ userId: req.params.id });
+    await Thought.deleteMany({ username: result.username});
 
     res.json({ message: 'User and associated thoughts deleted successfully.' });
   } catch (error) {

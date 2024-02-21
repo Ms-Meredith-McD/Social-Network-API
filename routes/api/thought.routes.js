@@ -1,38 +1,61 @@
 const router = require("express").Router();
-const Product = require("../../models/Product");
+const Customer = require("../../models/Thought");
+const Product = require("../../models/User");
 
-// Find all products 
+// TODO: Find all thoughts
 router.get("/", async(req, res) => {
   const result = await Product.find({})
   res.json({ result })
 });
 
-// Find customer by id value 
+// TODO: Find thoughts by id value 
 router.get("/:id", async(req, res) => {
   const result = await Product.findById(req.params.id);
   res.json({ result })
 });
 
-// Create a new customer
+// Create a new thought and push the created thought's id to the associated user's thoughts array field
 router.post("/", async(req, res) => {
-  const result = await Product.create(req.body);
-  res.json({ result })
+  const result = await Thought.create(req.body);
+  
+
+const poster = await User.findById(req.body.userId);
+poster.thoughts.push(result._id);
+res.json({ result })
 })
 
 
 
-// Find a customer by id and update it 
+// TODO: Find a thought by ID and update 
 router.put("/:id", async(req, res) => {
   const result = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true })
   res.json({ result });
 })
 
-// Delete a customer
+
+
+
+// Delete a thought
 router.delete("/:id", async(req, res) => {
-  const result = await Product.findByIdAndDelete(req.params.id)
+  const result = await Thought.findByIdAndDelete(req.params.id)
+  const poster = await Thought.findOne({ username: result.username});
+  
+  poster.thoughts = poster.thoughts.filter(thoughtId =>
+  thoughtId.toString() !== req.params.id);
+  await poster.save();
+
   res.json({ result });
 })
 
+// TODO: create a reaction stored in a single thought's reactions array field
+router.post("/:thoughtId/reactions", async (req, res) => {
+  const thought = await Thought.findById(req.params.thoughtId);
+  thought.reactions.push(req.body)
+  await thought.save();
+  res.json({thought, message: "reaction stored"})
+})
 
+
+// TODO: delete to pull and remove a reaction by the reactions reactionId value
 
 module.exports = router;
