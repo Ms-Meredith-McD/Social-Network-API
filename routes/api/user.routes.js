@@ -96,7 +96,7 @@ router.delete("/:userId/friends/:friendId", async (req, res) => {
       return res.status(404).json({ error: 'User not found.' });
     }
 
-    result.friends = user.friends.filter(friendId => friendId.toString() !== req.params.friendId);
+    result.friends = result.friends.filter(friendId => friendId.toString() !== req.params.friendId);
     await result.save();
 
     res.json({ message: 'Friend removed successfully.' });
