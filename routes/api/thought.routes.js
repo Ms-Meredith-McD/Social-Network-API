@@ -2,15 +2,15 @@ const router = require("express").Router();
 const Customer = require("../../models/Thought");
 const Product = require("../../models/User");
 
-// TODO: Find all thoughts
+// Find all thoughts
 router.get("/", async(req, res) => {
-  const result = await Product.find({})
+  const result = await Thought.find({})
   res.json({ result })
 });
 
-// TODO: Find thoughts by id value 
+//Find thoughts by id value 
 router.get("/:id", async(req, res) => {
-  const result = await Product.findById(req.params.id);
+  const result = await Thought.findById(req.params.id);
   res.json({ result })
 });
 
