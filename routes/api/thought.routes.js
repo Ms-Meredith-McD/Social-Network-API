@@ -47,15 +47,21 @@ router.delete("/:id", async(req, res) => {
   res.json({ result });
 })
 
-// TODO: create a reaction stored in a single thought's reactions array field
+//create a reaction stored in a single thought's reactions array field
 router.post("/:thoughtId/reactions", async (req, res) => {
-  const thought = await Thought.findById(req.params.thoughtId);
-  thought.reactions.push(req.body)
-  await thought.save();
-  res.json({thought, message: "reaction stored"})
-})
+  const result = await Thought.findById(req.params.thoughtId);
+  result.reactions.push(req.body)
+  await result.save();
+  res.json({result, message: "reaction stored"})
+});
 
 
-// TODO: delete to pull and remove a reaction by the reactions reactionId value
+//delete to pull and remove a reaction by the reactions reactionId value
+router.delete("/:thoughtId/reactions", async (req, res) => {
+  const result = await Thought.findById(req.params.thoughtId);
+thought.reactions = thought.reactions.filter(reactionId => reactionId.toString() !== req.params.reactionId);
+await result.save();
+res.json({result, message: "reaction deleted"})
+});
 
 module.exports = router;
