@@ -18,7 +18,7 @@ router.get("/:id", async (req, res) => {
     const result = await User.findById(req.params.id)
       .populate('thoughts')
       .populate('friends');
-      res.json( {result});
+    res.json({ result });
 
   } catch (error) {
     res.status(500).json({ error: 'An error occurred while fetching user.' });
@@ -29,9 +29,9 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const result = await User.create(req.body);
-  res.json({ result })
+    res.json({ result })
   } catch (error) {
-    res.status(500).json({ error: 'An error occured while creating user.'});
+    res.status(500).json({ error: 'An error occured while creating user.' });
   }
 });
 
@@ -40,10 +40,10 @@ router.post("/", async (req, res) => {
 // Find a user by id and update 
 router.put("/:id", async (req, res) => {
   try {
-  const result = await User.findByIdAndUpdate(req.params.id, req.body, { new: true })
-  res.json({ result });
+    const result = await User.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    res.json({ result });
   } catch (error) {
-    res.status(500).json({ error: 'An error occured while finding and updating user.'});
+    res.status(500).json({ error: 'An error occured while finding and updating user.' });
   }
 });
 
@@ -57,7 +57,7 @@ router.delete("/:id", async (req, res) => {
     }
 
     // Remove the user's associated thoughts
-    await Thought.deleteMany({ username: result.username});
+    await Thought.deleteMany({ username: result.username });
 
     res.json({ message: 'User and associated thoughts deleted successfully.' });
   } catch (error) {
@@ -79,8 +79,8 @@ router.post("/:userId/friends/:friendId", async (req, res) => {
     }
 
     // Add the friend to the user's friend list
-    user.friends.push(req.params.friendId);
-    await user.save();
+    result.friends.push(req.params.friendId);
+    await result.save();
 
     res.json({ message: 'Friend added successfully.' });
   } catch (error) {
