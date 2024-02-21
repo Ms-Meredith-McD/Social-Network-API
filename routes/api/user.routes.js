@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 // Find user by id value and populate thought and friend data
 router.get("/:id", async (req, res) => {
   try {
-    const result = await Customer.findById(req.params.id)
+    const result = await User.findById(req.params.id)
       .populate('thoughts')
       .populate('friends');
       res.json( {result});
