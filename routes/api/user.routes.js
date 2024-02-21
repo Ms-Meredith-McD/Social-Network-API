@@ -1,16 +1,19 @@
 const router = require("express").Router();
-const Customer = require("../../models/Customer");
-const Product = require("../../models/Product");
+const Customer = require("../../models/Thought");
+const Product = require("../../models/User");
 
-// Find all customers 
+// Find all users
 router.get("/", async(req, res) => {
-  const result = await Customer.find({}).populate("wishList")
+  const result = await User.find({})
   res.json({ result })
 });
 
-// Find customer by id value 
+// Find user by id value 
 router.get("/:id", async(req, res) => {
-  const result = await Customer.findById(req.params.id);
+  const result = await Customer.findById(req.params.id)
+  .populate('thoughts')
+  .populate('friends');
+  
   res.json({ result })
 });
 
