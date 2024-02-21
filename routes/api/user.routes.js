@@ -18,6 +18,7 @@ router.get("/:id", async (req, res) => {
     const result = await Customer.findById(req.params.id)
       .populate('thoughts')
       .populate('friends');
+      res.json( {result});
 
   } catch (error) {
     res.status(500).json({ error: 'An error occurred while fetching user.' });
