@@ -28,7 +28,7 @@ res.json({ result })
 
 // TODO: Find a thought by ID and update 
 router.put("/:id", async(req, res) => {
-  const result = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true })
+  const result = await Thought.findByIdAndUpdate(req.params.id, req.body, { new: true })
   res.json({ result });
 })
 
@@ -38,8 +38,8 @@ router.put("/:id", async(req, res) => {
 // Delete a thought
 router.delete("/:id", async(req, res) => {
   const result = await Thought.findByIdAndDelete(req.params.id)
-  const poster = await Thought.findOne({ username: result.username});
-  
+  const poster = await User.findOne({ username: result.username});
+  console.log(poster)
   poster.thoughts = poster.thoughts.filter(thoughtId =>
   thoughtId.toString() !== req.params.id);
   await poster.save();
@@ -57,11 +57,17 @@ router.post("/:thoughtId/reactions", async (req, res) => {
 
 
 //delete to pull and remove a reaction by the reactions reactionId value
-router.delete("/:thoughtId/reactions", async (req, res) => {
-  const result = await Thought.findById(req.params.thoughtId);
-thought.reactions = thought.reactions.filter(reactionId => reactionId.toString() !== req.params.reactionId);
+router.delete("/:thoughtId/reactions/:reactionId", async (req, res) => {
+try { const result = await Thought.findById(req.params.thoughtId);
+      if (!result) {
+        return res.status(404).json({ error: "Reaction not found."});
+      }
+result.reactions = result.reactions.filter(reaction => reaction.reactionId.toString() !== req.params.reactionId);
 await result.save();
-res.json({result, message: "reaction deleted"})
+res.json({result, message: "reaction deleted"});
+    } catch (error) {
+      res.status(500).json({ error, msg: 'An error occured while removing a reaction.'});
+    }
 });
 
 module.exports = router;

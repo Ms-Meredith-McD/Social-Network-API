@@ -24,8 +24,6 @@ const reactionSchema = new mongoose.Schema({
   }
 });
 
-module.exports = reactionSchema;
-
 const thoughtSchema = new mongoose.Schema({
   thoughtText: {
     type: String,
