@@ -36,23 +36,36 @@ router.put("/:id", async(req, res) => {
 
 
 // Delete a thought
-router.delete("/:id", async(req, res) => {
-  const result = await Thought.findByIdAndDelete(req.params.id)
-  const poster = await User.findOne({ username: result.username});
-  console.log(poster)
-  poster.thoughts = poster.thoughts.filter(thoughtId =>
-  thoughtId.toString() !== req.params.id);
-  await poster.save();
+router.delete("/:id", async (req, res) => {
+  try {
+    const result = await Thought.findByIdAndDelete(req.params.id);
 
-  res.json({ result });
-})
+    if (!result) {
+      return res.status(404).json({ message: "Thought not found" });
+    }
+    res.json({ result, message: "Thought deleted" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 //create a reaction stored in a single thought's reactions array field
 router.post("/:thoughtId/reactions", async (req, res) => {
-  const result = await Thought.findById(req.params.thoughtId);
-  result.reactions.push(req.body)
-  await result.save();
-  res.json({result, message: "reaction stored"})
+  try {
+    const result = await Thought.findById(req.params.thoughtId);
+
+    if (!result) {
+      return res.status(404).json({ message: "Thought not found" });
+    }
+
+    result.reactions.push(req.body);
+    await result.save();
+    res.json({ result, message: "Reaction stored" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 
